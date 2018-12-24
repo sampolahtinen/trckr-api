@@ -1,0 +1,9 @@
+endpoint: https://eu1.prisma.sh/sampo-lahtinen-250ef6/trckr-api/dev
+datamodel: datamodel.prisma
+
+generate:
+  - generator: typescript-client
+    output: ./generated/prisma-client/
+hooks:
+  post-deploy:
+  - prisma generate

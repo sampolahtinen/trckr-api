@@ -1,0 +1,27 @@
+type Query {
+  trackables: [Trackable!]!
+  trackable(id: ID!): Trackable
+  trackablesByUser(id: ID!): [Trackable!]!
+  users: [User!]!
+}
+
+type Mutation {
+  createUser(name: String!): User
+  createTrackable(name: String!): Trackable
+  increaseOccurence(id: ID!): Trackable
+  decreaseOccurence(id: ID!): Trackable
+}
+
+type User {
+  id: ID!
+  email: String
+  name: String!
+  trackables: [Trackable!]!
+}
+
+type Trackable {
+  id: ID!
+  name: String!
+  occurence: Int
+  userConnection: User
+}
