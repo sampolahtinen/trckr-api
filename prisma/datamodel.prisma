@@ -2,15 +2,7 @@ type User {
   id: ID! @unique
   name: String!
   email: String @unique
-  posts: [Post!]!
   trackables: [Trackable!]!
-}
-
-type Post {
-  id: ID! @unique
-  title: String!
-  published: Boolean! @default(value: "false")
-  author: User
 }
 
 type Trackable {

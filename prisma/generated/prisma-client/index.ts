@@ -14,7 +14,6 @@ export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
   U[keyof U];
 
 export interface Exists {
-  post: (where?: PostWhereInput) => Promise<boolean>;
   trackable: (where?: TrackableWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
 }
@@ -38,29 +37,6 @@ export interface Prisma {
    * Queries
    */
 
-  post: (where: PostWhereUniqueInput) => PostPromise;
-  posts: (
-    args?: {
-      where?: PostWhereInput;
-      orderBy?: PostOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => FragmentableArray<Post>;
-  postsConnection: (
-    args?: {
-      where?: PostWhereInput;
-      orderBy?: PostOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => PostConnectionPromise;
   trackable: (where: TrackableWhereUniqueInput) => TrackablePromise;
   trackables: (
     args?: {
@@ -113,22 +89,6 @@ export interface Prisma {
    * Mutations
    */
 
-  createPost: (data: PostCreateInput) => PostPromise;
-  updatePost: (
-    args: { data: PostUpdateInput; where: PostWhereUniqueInput }
-  ) => PostPromise;
-  updateManyPosts: (
-    args: { data: PostUpdateManyMutationInput; where?: PostWhereInput }
-  ) => BatchPayloadPromise;
-  upsertPost: (
-    args: {
-      where: PostWhereUniqueInput;
-      create: PostCreateInput;
-      update: PostUpdateInput;
-    }
-  ) => PostPromise;
-  deletePost: (where: PostWhereUniqueInput) => PostPromise;
-  deleteManyPosts: (where?: PostWhereInput) => BatchPayloadPromise;
   createTrackable: (data: TrackableCreateInput) => TrackablePromise;
   updateTrackable: (
     args: { data: TrackableUpdateInput; where: TrackableWhereUniqueInput }
@@ -173,9 +133,6 @@ export interface Prisma {
 }
 
 export interface Subscription {
-  post: (
-    where?: PostSubscriptionWhereInput
-  ) => PostSubscriptionPayloadSubscription;
   trackable: (
     where?: TrackableSubscriptionWhereInput
   ) => TrackableSubscriptionPayloadSubscription;
@@ -191,18 +148,6 @@ export interface ClientConstructor<T> {
 /**
  * Types
  */
-
-export type PostOrderByInput =
-  | "id_ASC"
-  | "id_DESC"
-  | "title_ASC"
-  | "title_DESC"
-  | "published_ASC"
-  | "published_DESC"
-  | "createdAt_ASC"
-  | "createdAt_DESC"
-  | "updatedAt_ASC"
-  | "updatedAt_DESC";
 
 export type TrackableOrderByInput =
   | "id_ASC"
@@ -230,11 +175,11 @@ export type UserOrderByInput =
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export type PostWhereUniqueInput = AtLeastOne<{
+export type TrackableWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
 }>;
 
-export interface PostWhereInput {
+export interface TrackableWhereInput {
   id?: ID_Input;
   id_not?: ID_Input;
   id_in?: ID_Input[] | ID_Input;
@@ -249,26 +194,32 @@ export interface PostWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
-  title?: String;
-  title_not?: String;
-  title_in?: String[] | String;
-  title_not_in?: String[] | String;
-  title_lt?: String;
-  title_lte?: String;
-  title_gt?: String;
-  title_gte?: String;
-  title_contains?: String;
-  title_not_contains?: String;
-  title_starts_with?: String;
-  title_not_starts_with?: String;
-  title_ends_with?: String;
-  title_not_ends_with?: String;
-  published?: Boolean;
-  published_not?: Boolean;
-  author?: UserWhereInput;
-  AND?: PostWhereInput[] | PostWhereInput;
-  OR?: PostWhereInput[] | PostWhereInput;
-  NOT?: PostWhereInput[] | PostWhereInput;
+  name?: String;
+  name_not?: String;
+  name_in?: String[] | String;
+  name_not_in?: String[] | String;
+  name_lt?: String;
+  name_lte?: String;
+  name_gt?: String;
+  name_gte?: String;
+  name_contains?: String;
+  name_not_contains?: String;
+  name_starts_with?: String;
+  name_not_starts_with?: String;
+  name_ends_with?: String;
+  name_not_ends_with?: String;
+  occurence?: Int;
+  occurence_not?: Int;
+  occurence_in?: Int[] | Int;
+  occurence_not_in?: Int[] | Int;
+  occurence_lt?: Int;
+  occurence_lte?: Int;
+  occurence_gt?: Int;
+  occurence_gte?: Int;
+  userConnection?: UserWhereInput;
+  AND?: TrackableWhereInput[] | TrackableWhereInput;
+  OR?: TrackableWhereInput[] | TrackableWhereInput;
+  NOT?: TrackableWhereInput[] | TrackableWhereInput;
 }
 
 export interface UserWhereInput {
@@ -314,9 +265,6 @@ export interface UserWhereInput {
   email_not_starts_with?: String;
   email_ends_with?: String;
   email_not_ends_with?: String;
-  posts_every?: PostWhereInput;
-  posts_some?: PostWhereInput;
-  posts_none?: PostWhereInput;
   trackables_every?: TrackableWhereInput;
   trackables_some?: TrackableWhereInput;
   trackables_none?: TrackableWhereInput;
@@ -325,70 +273,58 @@ export interface UserWhereInput {
   NOT?: UserWhereInput[] | UserWhereInput;
 }
 
-export interface TrackableWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  name?: String;
-  name_not?: String;
-  name_in?: String[] | String;
-  name_not_in?: String[] | String;
-  name_lt?: String;
-  name_lte?: String;
-  name_gt?: String;
-  name_gte?: String;
-  name_contains?: String;
-  name_not_contains?: String;
-  name_starts_with?: String;
-  name_not_starts_with?: String;
-  name_ends_with?: String;
-  name_not_ends_with?: String;
-  occurence?: Int;
-  occurence_not?: Int;
-  occurence_in?: Int[] | Int;
-  occurence_not_in?: Int[] | Int;
-  occurence_lt?: Int;
-  occurence_lte?: Int;
-  occurence_gt?: Int;
-  occurence_gte?: Int;
-  userConnection?: UserWhereInput;
-  AND?: TrackableWhereInput[] | TrackableWhereInput;
-  OR?: TrackableWhereInput[] | TrackableWhereInput;
-  NOT?: TrackableWhereInput[] | TrackableWhereInput;
-}
-
-export type TrackableWhereUniqueInput = AtLeastOne<{
-  id: ID_Input;
-}>;
-
 export type UserWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
   email?: String;
 }>;
 
-export interface PostCreateInput {
-  title: String;
-  published?: Boolean;
-  author?: UserCreateOneWithoutPostsInput;
+export interface TrackableCreateInput {
+  name: String;
+  occurence?: Int;
+  userConnection?: UserCreateOneWithoutTrackablesInput;
 }
 
-export interface UserCreateOneWithoutPostsInput {
-  create?: UserCreateWithoutPostsInput;
+export interface UserCreateOneWithoutTrackablesInput {
+  create?: UserCreateWithoutTrackablesInput;
   connect?: UserWhereUniqueInput;
 }
 
-export interface UserCreateWithoutPostsInput {
+export interface UserCreateWithoutTrackablesInput {
+  name: String;
+  email?: String;
+}
+
+export interface TrackableUpdateInput {
+  name?: String;
+  occurence?: Int;
+  userConnection?: UserUpdateOneWithoutTrackablesInput;
+}
+
+export interface UserUpdateOneWithoutTrackablesInput {
+  create?: UserCreateWithoutTrackablesInput;
+  update?: UserUpdateWithoutTrackablesDataInput;
+  upsert?: UserUpsertWithoutTrackablesInput;
+  delete?: Boolean;
+  disconnect?: Boolean;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface UserUpdateWithoutTrackablesDataInput {
+  name?: String;
+  email?: String;
+}
+
+export interface UserUpsertWithoutTrackablesInput {
+  update: UserUpdateWithoutTrackablesDataInput;
+  create: UserCreateWithoutTrackablesInput;
+}
+
+export interface TrackableUpdateManyMutationInput {
+  name?: String;
+  occurence?: Int;
+}
+
+export interface UserCreateInput {
   name: String;
   email?: String;
   trackables?: TrackableCreateManyWithoutUserConnectionInput;
@@ -406,22 +342,7 @@ export interface TrackableCreateWithoutUserConnectionInput {
   occurence?: Int;
 }
 
-export interface PostUpdateInput {
-  title?: String;
-  published?: Boolean;
-  author?: UserUpdateOneWithoutPostsInput;
-}
-
-export interface UserUpdateOneWithoutPostsInput {
-  create?: UserCreateWithoutPostsInput;
-  update?: UserUpdateWithoutPostsDataInput;
-  upsert?: UserUpsertWithoutPostsInput;
-  delete?: Boolean;
-  disconnect?: Boolean;
-  connect?: UserWhereUniqueInput;
-}
-
-export interface UserUpdateWithoutPostsDataInput {
+export interface UserUpdateInput {
   name?: String;
   email?: String;
   trackables?: TrackableUpdateManyWithoutUserConnectionInput;
@@ -514,181 +435,9 @@ export interface TrackableUpdateManyDataInput {
   occurence?: Int;
 }
 
-export interface UserUpsertWithoutPostsInput {
-  update: UserUpdateWithoutPostsDataInput;
-  create: UserCreateWithoutPostsInput;
-}
-
-export interface PostUpdateManyMutationInput {
-  title?: String;
-  published?: Boolean;
-}
-
-export interface TrackableCreateInput {
-  name: String;
-  occurence?: Int;
-  userConnection?: UserCreateOneWithoutTrackablesInput;
-}
-
-export interface UserCreateOneWithoutTrackablesInput {
-  create?: UserCreateWithoutTrackablesInput;
-  connect?: UserWhereUniqueInput;
-}
-
-export interface UserCreateWithoutTrackablesInput {
-  name: String;
-  email?: String;
-  posts?: PostCreateManyWithoutAuthorInput;
-}
-
-export interface PostCreateManyWithoutAuthorInput {
-  create?: PostCreateWithoutAuthorInput[] | PostCreateWithoutAuthorInput;
-  connect?: PostWhereUniqueInput[] | PostWhereUniqueInput;
-}
-
-export interface PostCreateWithoutAuthorInput {
-  title: String;
-  published?: Boolean;
-}
-
-export interface TrackableUpdateInput {
-  name?: String;
-  occurence?: Int;
-  userConnection?: UserUpdateOneWithoutTrackablesInput;
-}
-
-export interface UserUpdateOneWithoutTrackablesInput {
-  create?: UserCreateWithoutTrackablesInput;
-  update?: UserUpdateWithoutTrackablesDataInput;
-  upsert?: UserUpsertWithoutTrackablesInput;
-  delete?: Boolean;
-  disconnect?: Boolean;
-  connect?: UserWhereUniqueInput;
-}
-
-export interface UserUpdateWithoutTrackablesDataInput {
-  name?: String;
-  email?: String;
-  posts?: PostUpdateManyWithoutAuthorInput;
-}
-
-export interface PostUpdateManyWithoutAuthorInput {
-  create?: PostCreateWithoutAuthorInput[] | PostCreateWithoutAuthorInput;
-  delete?: PostWhereUniqueInput[] | PostWhereUniqueInput;
-  connect?: PostWhereUniqueInput[] | PostWhereUniqueInput;
-  disconnect?: PostWhereUniqueInput[] | PostWhereUniqueInput;
-  update?:
-    | PostUpdateWithWhereUniqueWithoutAuthorInput[]
-    | PostUpdateWithWhereUniqueWithoutAuthorInput;
-  upsert?:
-    | PostUpsertWithWhereUniqueWithoutAuthorInput[]
-    | PostUpsertWithWhereUniqueWithoutAuthorInput;
-  deleteMany?: PostScalarWhereInput[] | PostScalarWhereInput;
-  updateMany?:
-    | PostUpdateManyWithWhereNestedInput[]
-    | PostUpdateManyWithWhereNestedInput;
-}
-
-export interface PostUpdateWithWhereUniqueWithoutAuthorInput {
-  where: PostWhereUniqueInput;
-  data: PostUpdateWithoutAuthorDataInput;
-}
-
-export interface PostUpdateWithoutAuthorDataInput {
-  title?: String;
-  published?: Boolean;
-}
-
-export interface PostUpsertWithWhereUniqueWithoutAuthorInput {
-  where: PostWhereUniqueInput;
-  update: PostUpdateWithoutAuthorDataInput;
-  create: PostCreateWithoutAuthorInput;
-}
-
-export interface PostScalarWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  title?: String;
-  title_not?: String;
-  title_in?: String[] | String;
-  title_not_in?: String[] | String;
-  title_lt?: String;
-  title_lte?: String;
-  title_gt?: String;
-  title_gte?: String;
-  title_contains?: String;
-  title_not_contains?: String;
-  title_starts_with?: String;
-  title_not_starts_with?: String;
-  title_ends_with?: String;
-  title_not_ends_with?: String;
-  published?: Boolean;
-  published_not?: Boolean;
-  AND?: PostScalarWhereInput[] | PostScalarWhereInput;
-  OR?: PostScalarWhereInput[] | PostScalarWhereInput;
-  NOT?: PostScalarWhereInput[] | PostScalarWhereInput;
-}
-
-export interface PostUpdateManyWithWhereNestedInput {
-  where: PostScalarWhereInput;
-  data: PostUpdateManyDataInput;
-}
-
-export interface PostUpdateManyDataInput {
-  title?: String;
-  published?: Boolean;
-}
-
-export interface UserUpsertWithoutTrackablesInput {
-  update: UserUpdateWithoutTrackablesDataInput;
-  create: UserCreateWithoutTrackablesInput;
-}
-
-export interface TrackableUpdateManyMutationInput {
-  name?: String;
-  occurence?: Int;
-}
-
-export interface UserCreateInput {
-  name: String;
-  email?: String;
-  posts?: PostCreateManyWithoutAuthorInput;
-  trackables?: TrackableCreateManyWithoutUserConnectionInput;
-}
-
-export interface UserUpdateInput {
-  name?: String;
-  email?: String;
-  posts?: PostUpdateManyWithoutAuthorInput;
-  trackables?: TrackableUpdateManyWithoutUserConnectionInput;
-}
-
 export interface UserUpdateManyMutationInput {
   name?: String;
   email?: String;
-}
-
-export interface PostSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: PostWhereInput;
-  AND?: PostSubscriptionWhereInput[] | PostSubscriptionWhereInput;
-  OR?: PostSubscriptionWhereInput[] | PostSubscriptionWhereInput;
-  NOT?: PostSubscriptionWhereInput[] | PostSubscriptionWhereInput;
 }
 
 export interface TrackableSubscriptionWhereInput {
@@ -717,92 +466,6 @@ export interface NodeNode {
   id: ID_Output;
 }
 
-export interface Post {
-  id: ID_Output;
-  title: String;
-  published: Boolean;
-}
-
-export interface PostPromise extends Promise<Post>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  title: () => Promise<String>;
-  published: () => Promise<Boolean>;
-  author: <T = UserPromise>() => T;
-}
-
-export interface PostSubscription
-  extends Promise<AsyncIterator<Post>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  title: () => Promise<AsyncIterator<String>>;
-  published: () => Promise<AsyncIterator<Boolean>>;
-  author: <T = UserSubscription>() => T;
-}
-
-export interface User {
-  id: ID_Output;
-  name: String;
-  email?: String;
-}
-
-export interface UserPromise extends Promise<User>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  email: () => Promise<String>;
-  posts: <T = FragmentableArray<Post>>(
-    args?: {
-      where?: PostWhereInput;
-      orderBy?: PostOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-  trackables: <T = FragmentableArray<Trackable>>(
-    args?: {
-      where?: TrackableWhereInput;
-      orderBy?: TrackableOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-}
-
-export interface UserSubscription
-  extends Promise<AsyncIterator<User>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  email: () => Promise<AsyncIterator<String>>;
-  posts: <T = Promise<AsyncIterator<PostSubscription>>>(
-    args?: {
-      where?: PostWhereInput;
-      orderBy?: PostOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-  trackables: <T = Promise<AsyncIterator<TrackableSubscription>>>(
-    args?: {
-      where?: TrackableWhereInput;
-      orderBy?: TrackableOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-}
-
 export interface Trackable {
   id: ID_Output;
   name: String;
@@ -825,25 +488,67 @@ export interface TrackableSubscription
   userConnection: <T = UserSubscription>() => T;
 }
 
-export interface PostConnection {
-  pageInfo: PageInfo;
-  edges: PostEdge[];
+export interface User {
+  id: ID_Output;
+  name: String;
+  email?: String;
 }
 
-export interface PostConnectionPromise
-  extends Promise<PostConnection>,
+export interface UserPromise extends Promise<User>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  email: () => Promise<String>;
+  trackables: <T = FragmentableArray<Trackable>>(
+    args?: {
+      where?: TrackableWhereInput;
+      orderBy?: TrackableOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+}
+
+export interface UserSubscription
+  extends Promise<AsyncIterator<User>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  email: () => Promise<AsyncIterator<String>>;
+  trackables: <T = Promise<AsyncIterator<TrackableSubscription>>>(
+    args?: {
+      where?: TrackableWhereInput;
+      orderBy?: TrackableOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+}
+
+export interface TrackableConnection {
+  pageInfo: PageInfo;
+  edges: TrackableEdge[];
+}
+
+export interface TrackableConnectionPromise
+  extends Promise<TrackableConnection>,
     Fragmentable {
   pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<PostEdge>>() => T;
-  aggregate: <T = AggregatePostPromise>() => T;
+  edges: <T = FragmentableArray<TrackableEdge>>() => T;
+  aggregate: <T = AggregateTrackablePromise>() => T;
 }
 
-export interface PostConnectionSubscription
-  extends Promise<AsyncIterator<PostConnection>>,
+export interface TrackableConnectionSubscription
+  extends Promise<AsyncIterator<TrackableConnection>>,
     Fragmentable {
   pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<PostEdgeSubscription>>>() => T;
-  aggregate: <T = AggregatePostSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<TrackableEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateTrackableSubscription>() => T;
 }
 
 export interface PageInfo {
@@ -867,60 +572,6 @@ export interface PageInfoSubscription
   hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
   startCursor: () => Promise<AsyncIterator<String>>;
   endCursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface PostEdge {
-  node: Post;
-  cursor: String;
-}
-
-export interface PostEdgePromise extends Promise<PostEdge>, Fragmentable {
-  node: <T = PostPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface PostEdgeSubscription
-  extends Promise<AsyncIterator<PostEdge>>,
-    Fragmentable {
-  node: <T = PostSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregatePost {
-  count: Int;
-}
-
-export interface AggregatePostPromise
-  extends Promise<AggregatePost>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregatePostSubscription
-  extends Promise<AsyncIterator<AggregatePost>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface TrackableConnection {
-  pageInfo: PageInfo;
-  edges: TrackableEdge[];
-}
-
-export interface TrackableConnectionPromise
-  extends Promise<TrackableConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<TrackableEdge>>() => T;
-  aggregate: <T = AggregateTrackablePromise>() => T;
-}
-
-export interface TrackableConnectionSubscription
-  extends Promise<AsyncIterator<TrackableConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<TrackableEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateTrackableSubscription>() => T;
 }
 
 export interface TrackableEdge {
@@ -1026,53 +677,6 @@ export interface BatchPayloadSubscription
   extends Promise<AsyncIterator<BatchPayload>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Long>>;
-}
-
-export interface PostSubscriptionPayload {
-  mutation: MutationType;
-  node: Post;
-  updatedFields: String[];
-  previousValues: PostPreviousValues;
-}
-
-export interface PostSubscriptionPayloadPromise
-  extends Promise<PostSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = PostPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = PostPreviousValuesPromise>() => T;
-}
-
-export interface PostSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<PostSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = PostSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = PostPreviousValuesSubscription>() => T;
-}
-
-export interface PostPreviousValues {
-  id: ID_Output;
-  title: String;
-  published: Boolean;
-}
-
-export interface PostPreviousValuesPromise
-  extends Promise<PostPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  title: () => Promise<String>;
-  published: () => Promise<Boolean>;
-}
-
-export interface PostPreviousValuesSubscription
-  extends Promise<AsyncIterator<PostPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  title: () => Promise<AsyncIterator<String>>;
-  published: () => Promise<AsyncIterator<Boolean>>;
 }
 
 export interface TrackableSubscriptionPayload {
@@ -1181,14 +785,14 @@ The `String` scalar type represents textual data, represented as UTF-8 character
 export type String = string;
 
 /*
-The `Boolean` scalar type represents `true` or `false`.
-*/
-export type Boolean = boolean;
-
-/*
 The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
 */
 export type Int = number;
+
+/*
+The `Boolean` scalar type represents `true` or `false`.
+*/
+export type Boolean = boolean;
 
 export type Long = string;
 
@@ -1197,10 +801,6 @@ export type Long = string;
  */
 
 export const models: Model[] = [
-  {
-    name: "Post",
-    embedded: false
-  },
   {
     name: "Trackable",
     embedded: false

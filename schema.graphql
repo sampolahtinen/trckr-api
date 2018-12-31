@@ -1,15 +1,15 @@
 type Query {
   trackables: [Trackable!]!
-  trackable(id: ID!): Trackable
-  trackablesByUser(id: ID!): [Trackable!]!
+  trackable(trackableId: ID!): Trackable
+  trackablesByUser(userId: ID!): [Trackable!]!
   users: [User!]!
 }
 
 type Mutation {
   createUser(name: String!): User
-  createTrackable(name: String!): Trackable
-  increaseOccurence(id: ID!): Trackable
-  decreaseOccurence(id: ID!): Trackable
+  createTrackable(name: String!, userId: ID!): Trackable
+  increaseOccurence(trackableId: ID!): Trackable
+  decreaseOccurence(trackableId: ID!): Trackable
 }
 
 type User {

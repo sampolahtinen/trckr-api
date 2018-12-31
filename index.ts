@@ -1,4 +1,4 @@
-import { prisma } from './generated/prisma-client';
+import { prisma } from './prisma/generated/prisma-client';
 import { GraphQLServer } from 'graphql-yoga';
 
 const resolvers = {
@@ -10,11 +10,11 @@ const resolvers = {
       return context.prisma.trackables()
     },
     trackable(root, args, context) {
-      return context.prisma.trackable({ id: args.id })
+      return context.prisma.trackable({ id: args.trackableId })
     },
     trackablesByUser(root, args, context) {
       return context.prisma.user({
-        id: args.id
+        id: args.userId
       }).trackables()
     }
   },
@@ -27,13 +27,16 @@ const resolvers = {
     createTrackable(root, args, context) {
       return context.prisma.createTrackable({
         name: args.name,
+        userConnection: {
+          connect: { id: args.userId }
+        }
       })
     },
     async increaseOccurence(root, args, context) {
-      const prevOccurence = await prisma.trackable({ id: args.id })
+      const prevOccurence = await prisma.trackable({ id: args.trackableId })
       if (prevOccurence) {
         return context.prisma.updateTrackable({
-          where: { id: args.id },
+          where: { id: args.trackableId },
           data: {
             occurence: prevOccurence.occurence + 1,
           }
@@ -42,10 +45,10 @@ const resolvers = {
       throw new Error("Trackable not found");
     },
     async decreaseOccurence(root, args, context) {
-      const prevOccurence = await prisma.trackable({ id: args.id })
+      const prevOccurence = await prisma.trackable({ id: args.trackableId })
       if (prevOccurence) {
         return context.prisma.updateTrackable({
-          where: { id: args.id },
+          where: { id: args.trackableId },
           data: {
             occurence: prevOccurence.occurence - 1,
           }
@@ -77,4 +80,5 @@ const server = new GraphQLServer({
     prisma
   },
 })
+
 server.start(() => console.log('Server is running on http://localhost:4000'))
